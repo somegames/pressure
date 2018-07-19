@@ -3,8 +3,7 @@ class CrewMember extends Phaser.GameObjects.Sprite {
     super(scene, spriteCfg.x, spriteCfg.y, spriteCfg.key);
 
     // drag stuff
-    this.originalX = spriteCfg.x;
-    this.originalY = spriteCfg.y;
+    this.location = 'unassigned';
 
     this.setInteractive();
     scene.input.setDraggable(this);
@@ -22,6 +21,6 @@ class CrewMember extends Phaser.GameObjects.Sprite {
     this.stats = statsCfg;
   }
 
-  
+
 }
 export default CrewMember;

@@ -25,7 +25,7 @@ class MapScene extends Phaser.Scene {
                               bottomLeft: {x: crewPanel.x + 65, y: crewPanel.y + 186},
                               bottomRight: {x: crewPanel.x + 184, y: crewPanel.y + 186}};
 
-      // instantiate map
+      // instantiate map - map creates rooms now
       let map = new Map(this);
 
       // crew members
@@ -38,14 +38,13 @@ class MapScene extends Phaser.Scene {
       let lindSpriteCfg = {x: crewPane.bottomRight.x, y: crewPane.bottomRight.y, key:'portrait'};
       let lind = this.add.crewMember(lindSpriteCfg, "hi");
 
-      // TEST!
+      //TEST!
       let graphics = this.add.graphics();
       graphics.lineStyle(10, 0xFFFFFF);
 
       for (let i = 0; i < map.rooms.length; i++) {
         for (let j = 0; j < map.rooms.length; j++) {
           if (map.adjacent(map.rooms[i], map.rooms[j])) {
-            console.log('buut');
             graphics.beginPath();
             graphics.moveTo(map.rooms[i].x, map.rooms[i].y);
             graphics.lineTo(map.rooms[j].x, map.rooms[j].y);
@@ -54,22 +53,9 @@ class MapScene extends Phaser.Scene {
           }
         }
       }
+      // TEST END!
 
-      // rooms -- testing
-      // let roomGroup = this.add.group();
-      //
-      // let command = roomGroup.create(100, 100, 'room');
-      // let medBay = roomGroup.create(215, 95, 'room');
-      // let dorms = roomGroup.create(100, 210, 'room');
-      // let kitchen = roomGroup.create(215, 210, 'room');
-      // let hydroponics = roomGroup.create(315, 200, 'room');
-      // let powerGen = roomGroup.create(100, 300, 'room');
-      // let oxyGen = roomGroup.create(300, 315, 'room');
-      // let escapeRoom = roomGroup.create(215, 400, 'room');
-
-      // let allRooms = [command, medBay, dorms, kitchen, hydroponics, powerGen, oxyGen];
-
-      // drag events
+      // events
       this.input.on('dragstart', function (pointer, gameObject) {
         this.children.bringToTop(gameObject);
       }, this);
@@ -79,26 +65,56 @@ class MapScene extends Phaser.Scene {
         gameObject.y = dragY;
       });
 
-      // this.input.on('dragend', function(pointer, gameObject) {
-      //   let foundRoom = false;
-      //   for (let i = 0; i< allRooms.length; i++) {
-      //     if (checkOverlap(gameObject, allRooms[i])) {
-      //       gameObject.x = allRooms[i].x;
-      //       gameObject.y = allRooms[i].y;
-      //       foundRoom = true;
-      //       break;
-      //     }
-      //   }
-      //
-      //   if (foundRoom === false) {
-      //     gameObject.x = gameObject.originalX;
-      //     gameObject.y = gameObject.originalY;
-      //   }
-      // });
-  }
+      this.input.on('dragend', function(pointer, gameObject) {
+        let foundRoom = false;
+        for (let i = 0; i< map.rooms.length; i++) {
+          if (checkOverlap(gameObject, map.rooms[i])) {   // crew is dragged over a room
+            if (gameObject.location === map.rooms[i]) {   // it is the one they're already in
+              gameObject.x = map.rooms[i].x;              // keep the sprite there
+              gameObject.y = map.rooms[i].y;              // don't change crew or room state
+              foundRoom = true;
+              break;
+            }
 
-  initTurnManager() {
-    this.turnManager = new TurnManager(this);
+            else if (map.rooms[i].occupied === true ) {   // room is already occupied by another crew member
+              break;                                      // stop looking
+            }
+
+            else {                                        // crew can get into room
+              gameObject.x = map.rooms[i].x;
+              gameObject.y = map.rooms[i].y;
+
+              if (gameObject.location !== 'unassigned') {                     // crew was in a room previously, so
+                map.roomByName(gameObject.location.name).occupied = false;    //mark previous room as free
+              }
+
+              gameObject.location = map.rooms[i]; // set crew location to the room
+              map.rooms[i].occupied = true;       // occupy new room
+              foundRoom = true;
+              break;
+            }
+          }
+        }
+
+        if (foundRoom === false) {                    // crew was not dragged over a new room
+          gameObject.x = gameObject.input.dragStartX; // snap to where it had been
+          gameObject.y = gameObject.input.dragStartY;
+        }
+      });
+
+      // turn stuff
+      let nextTurnButton = this.add.text(500, 500, 'NEXT TURN', {fontFamily: 'Arial', fontSize: 30}).setInteractive();
+      nextTurnButton.on('pointerover', function () { this.setTint(0x00ff00)});
+      nextTurnButton.on('pointerup', () => {
+        this.events.emit('nextTurn')});
+
+      // Flood one room to test it
+      map.roomByName('Hydroponics').leaking = true;
+      map.roomByName('Power Generator').leaking = true;
+
+      this.events.on('nextTurn', () => {
+        map.processNextTurn();
+      }, this);
   }
 }
 

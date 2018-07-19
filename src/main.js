@@ -17,7 +17,7 @@ class CrewMemberPlugin extends Phaser.Plugins.BasePlugin {
 
   createCrewMember(spriteCfg, statsCfg) {
     let crewMember = new CrewMember(this.scene, spriteCfg, statsCfg);
-    this.displayList.add(crewMember));
+    this.displayList.add(crewMember);
     return crewMember;
   }
 }

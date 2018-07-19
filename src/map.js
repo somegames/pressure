@@ -8,6 +8,8 @@ class Map {
     this.maxHP;
     this.currentHP;
 
+    this.occupied = false;
+
     // construct default map for now - add rooms as nodes
     this.rooms = [
       scene.add.room({x:100, y:100, key:'room'}, {name:'Command Center'}),
@@ -50,6 +52,51 @@ class Map {
     return (this.graph.nodeEdges(roomA.name, roomB.name).length !== 0);
   }
 
+  // returns names (node ids) of all neighbours of a room
+  neighbors(room) {
+    return this.graph.neighbors(room.name);
+  }
+
+  processNextTurn() {
+    let processQueue = [];
+
+    for (let i = 0; i < this.rooms.length; i++) {
+      if (this.rooms[i].waterLevel >= 100 && this.rooms[i].canSpill === true) {
+        // move water to an adjacent room
+        let n = this.neighbors(this.rooms[i]);
+
+        if (n.length >= 1) {
+          // go into the one with the smallest water level
+          n.sort((a, b) => {
+            if (this.roomByName(a).waterLevel === this.roomByName(b).waterLevel) {
+              return 0;
+            }
+            if (this.roomByName(a).waterLevel > this.roomByName(b).waterLevel) {
+              return 1;
+            }
+            if (this.roomByName(a).waterLevel < this.roomByName(b).waterLevel) {
+              return -1;
+            }
+          });
+
+          if (this.roomByName(n[0]).waterLevel < 100) {
+            console.log('spilling water from ' + this.rooms[i].name + ' into ' + n[0]);
+            this.roomByName(n[0]).waterLevel += 50;
+            this.roomByName(n[0]).canSpill = false;
+          }
+        }
+
+        else {   // there is no edge
+          console.log('no edge!');
+        }
+      }
+    }
+
+    for (let i = 0; i < this.rooms.length; i++) {
+      this.rooms[i].processNextTurn();
+    }
+
+  }
 };
 
 export default Map;
