@@ -16,7 +16,9 @@ class CrewMemberPlugin extends Phaser.Plugins.BasePlugin {
   }
 
   createCrewMember(spriteCfg, statsCfg) {
-    return this.displayList.add(new CrewMember(this.scene, spriteCfg, statsCfg));
+    let crewMember = new CrewMember(this.scene, spriteCfg, statsCfg);
+    this.displayList.add(crewMember));
+    return crewMember;
   }
 }
 
@@ -27,7 +29,9 @@ class DiePlugin extends Phaser.Plugins.BasePlugin {
   }
 
   createDie(spriteCfg, dieCfg) {
-    return this.displayList.add(new Die(this.scene, spriteCfg, dieCfg));
+    let die = new Die(this.scene, spriteCfg, dieCfg);
+    this.displayList.add(die);
+    return die;
   }
 }
 
