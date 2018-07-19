@@ -21,5 +21,7 @@ class CrewMember extends Phaser.GameObjects.Sprite {
     // stats stuff
     this.stats = statsCfg;
   }
+
+  
 }
 export default CrewMember;
