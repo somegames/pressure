@@ -59,9 +59,7 @@ class Die extends Phaser.GameObjects.Sprite {
   }
 
   roll() {
-    console.log(this.rollTable);
     let result = this.rollTable[Math.floor(Math.random() * this.rollTable.length)];
-    console.log(result);
 
     let key = 'roll' + this.type;
 
@@ -83,6 +81,8 @@ class Die extends Phaser.GameObjects.Sprite {
         this.setFrame(this.typeIndex[this.type][result]);
         this.setInteractive();
     }, this);
+
+    return result;
 
   }
 

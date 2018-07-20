@@ -4,16 +4,37 @@ class Room extends Phaser.GameObjects.Sprite {
     super(scene, spriteCfg.x, spriteCfg.y, 'room');
     scene.add.existing(this);
 
+    // info stuff
     this.name = roomCfg.name;
+
+    // event stuff
+    this.eventList = [];
+
+    // water stuff (TODO:  maybe integrate this with events dispatcher)
     this.waterLevel = roomCfg.waterLevel ? roomCfg.waterLevel : 0;    // range from 0->100
     this.leaking = false;
 
     this.canSpill = true;  // a room cannot be spilled into and spill on the same turn
   }
 
-  processNextTurn() {
-    // check yo self
+  removeEvent(key) {
+      this.eventList.filter(function (key) {
+          return item.key !== key.key;
+      });
+  }
 
+  addEvent(key) {
+      // don't add two events of the same type
+      if (this.eventList.indexOf(key) === -1 && this.eventList.length <= 4) {
+          this.eventList.push(key);
+          return true;
+      } else {
+          return false;
+      }
+  }
+
+  processNextTurn() {
+    // Water stuff
     if (this.leaking) {
       this.waterLevel += 50;
     }
@@ -32,6 +53,9 @@ class Room extends Phaser.GameObjects.Sprite {
 
     // reset
     this.canSpill = true;
+
+    // Event stuff
+    
   }
 }
 

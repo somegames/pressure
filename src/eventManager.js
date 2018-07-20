@@ -1,16 +1,22 @@
-class TurnManager {
-  constructor() {
+class EventManager {
+  constructor(json) {
     this.turn = 0;
-    this.difficulty = 1; // unused
-    this.eventDispatchList = [];  // full of events
+    this.difficulty = 1;            // unused
+    this.events = [];               // all event objs
+    this.eventDispatchList = [];    // full of events that will be dispatched ?
+
+    // grab and parse events from XML
+
   }
 
-  nextTurn() {
+  processNextTurn() {
     // check for fail condition
+
+    // turn counter used to determine which
     this.turn += 1;
   }
 
-  dispatchEvents() {
-    
+  dispatchEvent() {
+
   }
 }

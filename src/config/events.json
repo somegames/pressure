@@ -1,0 +1,16 @@
+[{ 	"sprite": "",
+	"key": "exampleEvent",
+	"title": "This Is The Event Title",
+	"desc": "this is the event desc",
+	"detailedDesc": "This is the detailed desc",
+	"possibleRooms": ["Med Bay", "Command Center"],
+	"severity": 1,
+	"permanent": false,
+	"category": "Technical",
+	"successThreshold": 5,
+	"onFailureDesc": "oh no u failed :(",
+	"onSuccessDesc": "hooray u succeeded!",
+	"onFailureScript": "damage(attempter, 2)",
+	"onSuccessScript": "heal(attempter, 2)",
+	"onIgnoreScript": "remain()" 
+}]
