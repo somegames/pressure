@@ -1,12 +1,20 @@
+import Event from '/pressure/src/event';
+
 class EventManager {
-  constructor(json) {
+  constructor(scene, json) {
     this.turn = 0;
     this.difficulty = 1;            // unused
-    this.events = [];               // all event objs
+    this.events = {};        // all event objs
     this.eventDispatchList = [];    // full of events that will be dispatched ?
 
-    // grab and parse events from XML
+    // make bigass list of event objects
+    // in the dumbest way possible
+    for (let i = 0; i < json.length; i++) {
+      let eventToAdd = new Event(json[i]),
+        key = eventToAdd.key;
 
+      this.events[key] = eventToAdd;
+    }
   }
 
   processNextTurn() {
@@ -16,7 +24,21 @@ class EventManager {
     this.turn += 1;
   }
 
-  dispatchEvent() {
+  dispatchEvent(room, eventId) {
+    room.addEvent(this.events[eventId]);
+  }
 
+  dispatchRandomEvent(room) {
+    room.events.addEvent(this.events[Math.floor(Math.random()*this.events.length)]);
+  }
+
+  getEvent(eventId) {
+    return this.events[eventId];
+  }
+
+  dispatchEventObj(room, eventToDispatch) { // TESTING ONLY
+    room.addEvent(eventToDispatch);
   }
 }
+
+export default EventManager

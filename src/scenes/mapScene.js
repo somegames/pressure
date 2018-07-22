@@ -1,4 +1,5 @@
 import Map from '../map';
+import EventManager from '../eventManager'
 
 class MapScene extends Phaser.Scene {
     constructor() {
@@ -12,6 +13,9 @@ class MapScene extends Phaser.Scene {
       this.load.image('portrait', 'assets/portrait.png');
       this.load.image('room', 'assets/room.png');
 
+      this.load.image('eventplaceholder', 'assets/fire.png');
+
+      this.load.json('eventData', 'config/events.json');
     }
 
     create() {
@@ -28,6 +32,10 @@ class MapScene extends Phaser.Scene {
       // instantiate map - map creates rooms now
       let map = new Map(this);
 
+      // events stuff
+      let eventData = this.cache.json.get('eventData');
+      let eventManager = new EventManager(this, eventData);
+
       // crew members
       let jimSpriteCfg = {x: crewPane.topLeft.x, y: crewPane.topLeft.y, key:'portrait'};
       let jim = this.add.crewMember(jimSpriteCfg, "hi");
@@ -38,7 +46,13 @@ class MapScene extends Phaser.Scene {
       let lindSpriteCfg = {x: crewPane.bottomRight.x, y: crewPane.bottomRight.y, key:'portrait'};
       let lind = this.add.crewMember(lindSpriteCfg, "hi");
 
-      //TEST!
+      // TESTING EVENTS!!
+      let event = eventManager.getEvent('exampleEvent');
+      event.assignCrewMember(jim);
+      eventManager.dispatchEventObj(map.rooms[2], event);
+      // TESTING END!!!
+
+      //Drawing airlocks with lines for now - change later
       let graphics = this.add.graphics();
       graphics.lineStyle(10, 0xFFFFFF);
 

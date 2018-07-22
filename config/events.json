@@ -1,5 +1,5 @@
-[{ 	"sprite": "",
-	"key": "exampleEvent",
+[{ 	"exampleEvent": {
+	"sprite": "",
 	"title": "This Is The Event Title",
 	"desc": "this is the event desc",
 	"detailedDesc": "This is the detailed desc",
@@ -12,5 +12,6 @@
 	"onSuccessDesc": "hooray u succeeded!",
 	"onFailureScript": "damage(attempter, 2)",
 	"onSuccessScript": "heal(attempter, 2)",
-	"onIgnoreScript": "remain()" 
-}]
+	"onIgnoreScript": "remain()"
+}},
+{ "exampleEvent2": {"thing":"hi"}}]

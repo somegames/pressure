@@ -60,7 +60,7 @@ let config = {
       {key: 'RoomPlugin', plugin: RoomPlugin, start: true}
     ]
   },
-  scene: [MapScene]
+  scene: [MapScene, EventPromptScene]
 };
 
 let game = new Phaser.Game(config);

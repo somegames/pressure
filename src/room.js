@@ -4,6 +4,9 @@ class Room extends Phaser.GameObjects.Sprite {
     super(scene, spriteCfg.x, spriteCfg.y, 'room');
     scene.add.existing(this);
 
+    // need this for events for now... bad :(
+    this.scene = scene;
+
     // info stuff
     this.name = roomCfg.name;
 
@@ -55,7 +58,15 @@ class Room extends Phaser.GameObjects.Sprite {
     this.canSpill = true;
 
     // Event stuff
-    
+    if (this.eventList.length !== 0) {
+      for (let i = 0; i < this.eventList.length; i++) {
+        let eventSprite = this.scene.add.sprite(this.x + 20, this.y + 20, 'eventplaceholder').setInteractive();
+        eventSprite.on('pointerup', () => {
+          this.scene.scene.pause();
+          this.scene.scene.launch('eventPromptScene', this.eventList[i]);
+        });
+      }
+    }
   }
 }
 

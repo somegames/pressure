@@ -19,6 +19,7 @@ class Die extends Phaser.GameObjects.Sprite {
     // have to call this before I can set the roll faces
     super(scene, spriteCfg.x, spriteCfg.y, 'dice', typeIndex[dieCfg.type][defaultFace[dieCfg.quality]]);
     scene.add.existing(this);
+    this.scene = scene;
 
     this.setInteractive();
 
@@ -86,9 +87,6 @@ class Die extends Phaser.GameObjects.Sprite {
 
   }
 
-  rollRepeatCallback(sprite, anim, result) {
-    console.log('this does not work');
-  }
 }
 
 export default Die;
